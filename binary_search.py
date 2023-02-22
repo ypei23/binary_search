@@ -26,6 +26,28 @@ def find_smallest_positive(xs):
     >>> find_smallest_positive([-3, -2, -1]) is None
     True
     '''
+    if len(xs) == 0:
+        return None
+    def go(left, right):
+        if left == right:
+            if xs[left] > 0:
+                return left
+            else:
+                return None
+        mid = (left + right) // 2
+        if xs[mid] > 0 and xs[mid - 1] < 0:
+            return mid
+        if xs[mid] > 0:
+            right = mid
+            return go(left, right)
+        if xs[mid] < 0:
+            left = mid + 1
+            return go(left, right)
+        if xs[mid] == 0:
+            return mid + 1
+
+    return go(0, len(xs) - 1)
+
 
 
 def count_repeats(xs, x):
@@ -52,7 +74,33 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
-
+    count = 0
+    if len(xs) == 0:
+        return count
+    if xs[0] < x:
+        return count
+    mid = len(xs) // 2
+    if xs[mid] < x:
+        return count_repeats(xs[:mid], x)
+    if xs[mid] > x:
+        return count_repeats(xs[mid + 1:], x)
+    if xs[mid] == x:
+        count += 1
+        i = 0 
+        j = 0
+        while i < mid:
+            if xs[mid - i - 1] == x:
+                count += 1
+                i += 1
+            else:
+                break
+        while j < len(xs) - mid - 1:
+            if xs[mid + j + 1] == x:
+                count += 1
+                j += 1
+            else:
+                break
+    return count
 
 def argmin(f, lo, hi, epsilon=1e-3):
     '''
@@ -87,7 +135,14 @@ def argmin(f, lo, hi, epsilon=1e-3):
     >>> argmin(lambda x: (x-5)**2, -20, 0)
     -0.00016935087808430278
     '''
-
+    if hi - lo < epsilon:
+        return (hi + lo) / 2
+    m1 = lo + (hi - lo) / 3
+    m2 = hi - (hi - lo) / 3
+    if f(m1) < f(m2):
+        return argmin(f, lo, m2, epsilon)
+    else: 
+        return argmin(f, m1, hi, epsilon)
 
 ################################################################################
 # the functions below are extra credit
@@ -121,5 +176,8 @@ def argmin_simple(f, epsilon=1e-3):
     If you implement the find_boundaries function correctly,
     then this function will work correctly too.
     '''
+'''
     lo, hi = find_boundaries(f)
     return argmin(f, lo, hi, epsilon)
+'''
+
