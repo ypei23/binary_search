@@ -68,7 +68,7 @@ def count_repeats(xs, x):
     Then, once you're sure these functions work independently,
     completing step 3 will be easy.
 
-    APPLICATION:
+    APPLICATION
     This is a classic question for technical interviews.
 
     >>> count_repeats([5, 4, 3, 3, 3, 3, 3, 3, 3, 2, 1], 3)
