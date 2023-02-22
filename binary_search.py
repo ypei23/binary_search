@@ -76,33 +76,39 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
-    count = 0
-    if len(xs) == 0:
-        return count
-    if xs[0] < x:
-        return count
-    mid = len(xs) // 2
-    if xs[mid] < x:
-        return count_repeats(xs[:mid], x)
-    if xs[mid] > x:
-        return count_repeats(xs[mid + 1:], x)
-    if xs[mid] == x:
-        count += 1
-        i = 0
-        j = 0
-        while i < mid:
-            if xs[mid - i - 1] == x:
-                count += 1
-                i += 1
+
+    def leftmost(lo, hi, xs, x):
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            if xs[mid] == x:
+                if mid == 0 or xs[mid - 1] != x:
+                    return mid
+                hi = mid - 1
+            elif xs[mid] < x:
+                hi = mid - 1
             else:
-                break
-        while j < len(xs) - mid - 1:
-            if xs[mid + j + 1] == x:
-                count += 1
-                j += 1
+                lo = mid + 1
+        return -1
+
+    def rightmost(lo, hi, xs, x):
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            if xs[mid] == x:
+                if mid == len(xs) - 1 or xs[mid + 1] != x:
+                    return mid
+                lo = mid + 1
+            elif xs[mid] < x:
+                hi = mid - 1
             else:
-                break
-    return count
+                lo = mid + 1
+        return -1
+    left = leftmost(0, len(xs) - 1, xs, x)
+    if left == -1:
+        return 0
+    right = rightmost(left, len(xs) - 1, xs, x)
+    if right == -1:
+        return 0
+    return right - left + 1
 
 
 def argmin(f, lo, hi, epsilon=1e-3):
